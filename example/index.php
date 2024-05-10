@@ -82,7 +82,7 @@ $add_ip_list = [
 ];
 $ip          = new ReliableBotIPList(
 	[
-		'output_path' => __DIR__.DIRECTORY_SEPARATOR.'bot-ips.csv',
+		'output_path' => __DIR__.DIRECTORY_SEPARATOR.'example.csv',
 		'add_comment' => true,
 		'add_ip_list' => $add_ip_list,
 	]

@@ -4,7 +4,7 @@
  *
  * @package    KALEIDPIXEL
  * @author     KAZUKI Otsuhata
- * @copyright  2023 (C) Kaleid Pixel
+ * @copyright  2024 (C) Kaleid Pixel
  * @license    MIT License
  * @version    1.0.0
  **/
