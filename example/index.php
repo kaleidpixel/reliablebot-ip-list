@@ -8,7 +8,10 @@ use kaleidpixel\ReliableBotIPList;
  * https://jetpack.com/support/how-to-add-jetpack-ips-allowlist/
  */
 $add_ip_list = [
-	'jetpack' => [
+	'PowerDMARC' => [
+		'54.76.99.218',
+	],
+	'jetpack'    => [
 		'122.248.245.244/32',
 		'54.217.201.243/32',
 		'54.232.116.4/32',

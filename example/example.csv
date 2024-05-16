@@ -1611,6 +1611,7 @@
 2001:4860:4801:4145::/64,google-user-triggered-fetchers-2
 2001:4860:4801:4146::/64,google-user-triggered-fetchers-2
 2001:4860:4801:4147::/64,google-user-triggered-fetchers-2
+54.76.99.218,PowerDMARC
 122.248.245.244/32,jetpack
 54.217.201.243/32,jetpack
 54.232.116.4/32,jetpack
