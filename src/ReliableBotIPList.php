@@ -16,6 +16,10 @@ use Exception;
 use finfo;
 
 class ReliableBotIPList {
+	/**
+	 * @see https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
+	 * @since 1.0.0
+	 */
 	const IP_LIST_ENDPOINTS = [
 		'google'                           => 'https://www.gstatic.com/ipranges/goog.json',
 		'googlebot'                        => 'https://developers.google.com/static/search/apis/ipranges/googlebot.json',
@@ -23,6 +27,8 @@ class ReliableBotIPList {
 		'google-user-triggered-fetchers'   => 'https://developers.google.com/static/search/apis/ipranges/user-triggered-fetchers.json',
 		'google-user-triggered-fetchers-2' => 'https://developers.google.com/static/search/apis/ipranges/user-triggered-fetchers-google.json',
 		'bingbot'                          => 'https://www.bing.com/toolbox/bingbot.json',
+		'duckduckgo'                       => 'https://duckduckgo.com/duckduckbot.json',
+		'duckassistbot'                    => 'https://duckduckgo.com/duckassistbot.json',
 	];
 
 	/**
@@ -279,7 +285,7 @@ class ReliableBotIPList {
 
 		if ($this->isCreate($force))
 		{
-			$iplist = $this->addGooglebotIpList();
+			$iplist = $this->addBotIpList();
 
 			if (in_array($this->ipv, [4, 46], true))
 			{
@@ -355,12 +361,12 @@ class ReliableBotIPList {
 	}
 
 	/**
-	 * Add Googlebot IP List.
+	 * Add Bot IP List.
 	 *
 	 * @return array
 	 * @since 1.0.0
 	 */
-	protected function addGooglebotIpList(): array
+	protected function addBotIpList(): array
 	{
 		$contents = $this->curl_get_contents($this->ipListEndPoints());
 		$result   = [
