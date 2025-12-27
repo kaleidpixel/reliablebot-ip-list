@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP 7.4 or later
+ * PHP 8.5 or later
  *
  * @package    KALEIDPIXEL
  * @author     KAZUKI Otsuhata
@@ -11,16 +11,18 @@
 
 namespace kaleidpixel;
 
+use DateMalformedStringException;
 use DateTime;
 use Exception;
 use finfo;
+use InvalidArgumentException;
 
 class ReliableBotIPList {
 	/**
-	 * @see https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
+	 * @see   https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
 	 * @since 1.0.0
 	 */
-	const IP_LIST_ENDPOINTS = [
+	const array IP_LIST_ENDPOINTS = [
 		'google'                           => 'https://www.gstatic.com/ipranges/goog.json',
 		'googlebot'                        => 'https://developers.google.com/static/search/apis/ipranges/googlebot.json',
 		'google-special-crawlers'          => 'https://developers.google.com/static/search/apis/ipranges/special-crawlers.json',
@@ -132,7 +134,7 @@ class ReliableBotIPList {
 		$multiHandle = curl_multi_init();
 		$curlHandles = [];
 		$results     = [];
-		$running     = null;
+		$running     = 0;
 
 		foreach ($urls as $i => $url)
 		{
@@ -174,10 +176,7 @@ class ReliableBotIPList {
 			$results[$i]['http_code'] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 			curl_multi_remove_handle($multiHandle, $curl);
-			curl_close($curl);
 		}
-
-		curl_multi_close($multiHandle);
 
 		return $results;
 	}
@@ -185,18 +184,19 @@ class ReliableBotIPList {
 	/**
 	 * Output the header in the web browser to download the file and initiate the file download.
 	 *
-	 * @param string      $file_path
-	 * @param string|null $mime_type
+	 * @param string      $file_path The path to the file to be downloaded
+	 * @param string|null $mime_type The MIME type of the file. If null, it will be automatically detected.
 	 *
 	 * @return void
+	 * @throws InvalidArgumentException If the file is not readable or does not exist
 	 * @since  1.0.0
 	 * @link   https://qiita.com/fallout/items/3682e529d189693109eb
 	 */
-	public static function download(string $file_path = '', string $mime_type = null): void
+	public static function download(string $file_path = '', ?string $mime_type = null): void
 	{
 		if (!is_readable($file_path))
 		{
-			die($file_path);
+			throw new InvalidArgumentException("File not readable: {$file_path}");
 		}
 
 		$mime_type = (isset($mime_type)) ? $mime_type : (new finfo(FILEINFO_MIME_TYPE))->file($file_path);
@@ -227,6 +227,7 @@ class ReliableBotIPList {
 	 * @param bool $force
 	 *
 	 * @return bool
+	 * @throws DateMalformedStringException
 	 * @since 1.0.0
 	 */
 	protected function isCreate(bool $force = false): bool
@@ -277,6 +278,7 @@ class ReliableBotIPList {
 	 * @param bool $force
 	 *
 	 * @return array
+	 * @throws DateMalformedStringException
 	 * @since 1.0.0
 	 */
 	protected function create(bool $force = false): array
@@ -336,9 +338,10 @@ class ReliableBotIPList {
 	 * @param bool $echo
 	 *
 	 * @return void
+	 * @throws DateMalformedStringException
 	 * @since 1.0.0
 	 */
-	public function read(bool $force = false, bool $echo = false)
+	public function read(bool $force = false, bool $echo = false): void
 	{
 		$content = $this->create($force);
 
@@ -352,7 +355,7 @@ class ReliableBotIPList {
 		}
 		elseif ($echo)
 		{
-			print_r("<pre>${$content[0]['body']}</pre>");
+			print_r("<pre>{$content[0]['body']}</pre>");
 		}
 		else
 		{
