@@ -104,9 +104,9 @@ class ReliableBotIPList {
 	}
 
 	/**
-	 * Check if the type of interface between the web server and PHP is CLI.
+	 * Determine whether PHP is running in a Command Line Interface (CLI) environment.
 	 *
-	 * @return bool
+	 * @return bool `true` if running in a CLI environment, `false` otherwise.
 	 * @since 1.0.0
 	 */
 	public static function is_cli(): bool
@@ -122,10 +122,11 @@ class ReliableBotIPList {
 	}
 
 	/**
-	 * @param array  $haystack
-	 * @param string $needle
+	 * Determine whether a string value exists in any sub-array of a top-level array.
 	 *
-	 * @return bool
+	 * @param array  $haystack Top-level array whose elements may be arrays to search.
+	 * @param string $needle   The string value to look for.
+	 * @return bool `true` if `$needle` is found in any immediate sub-array of `$haystack`, `false` otherwise.
 	 */
 	public static function is_value_exists_recursive(array $haystack, string $needle): bool
 	{
@@ -241,12 +242,13 @@ class ReliableBotIPList {
 	}
 
 	/**
-	 * Is Create.
+	 * Determine whether the IP list output file needs creation or regeneration.
 	 *
-	 * @param bool $force
+	 * Compares the output file's modification date to the current date and signals creation
+	 * when the file is missing, its modification date is older than today, or when forced.
 	 *
-	 * @return bool
-	 * @throws DateMalformedStringException
+	 * @param bool $force If true, force creation regardless of file age.
+	 * @return bool `true` if the output file should be (re)created, `false` otherwise.
 	 * @since 1.0.0
 	 */
 	protected function is_create(bool $force = false): bool
@@ -294,12 +296,15 @@ class ReliableBotIPList {
 	}
 
 	/**
-	 * Create file.
+	 * Generate or update the cached IP list file from configured endpoints and return the fetch result.
 	 *
-	 * @param bool $force
+	 * Builds the output file using IPv4/IPv6 prefixes from remote endpoints and any additional IPs,
+	 * optionally including comments, writes the file when there is content to save, and returns the
+	 * result of fetching the generated file.
 	 *
-	 * @return array
-	 * @throws DateMalformedStringException
+	 * @param bool $force If true, force regeneration of the output file regardless of the existing file's date.
+	 * @return array An array of response data from curl_get_contents for the generated output file.
+	 * @throws DateMalformedStringException If the file modification date cannot be parsed during the create decision.
 	 * @since 1.0.0
 	 */
 	protected function create(bool $force = false): array
@@ -385,9 +390,13 @@ class ReliableBotIPList {
 	}
 
 	/**
-	 * Add Bot IP List.
+	 * Retrieve and collect IPv4 and IPv6 prefixes from the configured endpoint JSON sources.
 	 *
-	 * @return array
+	 * Invalid endpoints (non-200 responses, non-JSON bodies, or JSON without a `prefixes` array)
+	 * are skipped. Duplicate prefixes across endpoints are omitted.
+	 *
+	 * @return array An associative array with two keys: `ipv4` and `ipv6`. Each key maps endpoint
+	 *               indexes to arrays of unique IP prefix strings (e.g., CIDR notations).
 	 * @since 1.0.0
 	 */
 	protected function add_bot_ip_list(): array
