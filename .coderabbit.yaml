@@ -1,0 +1,82 @@
+# CodeRabbit Configuration
+# https://docs.coderabbit.ai/guides/configure-coderabbit
+
+# Language and response settings
+language: ja # CodeRabbitのレビューコメントを日本語で生成
+early_access: true
+enable_free_tier: true
+
+# Review settings
+reviews:
+  # Review profile - controls the depth and focus of reviews
+  profile: chill # Options: chill, assertive, or a custom profile (balanced approach)
+
+  # Request changes workflow - determines when CodeRabbit should block PRs
+  request_changes_workflow: false # Don't block PRs, just provide suggestions
+
+  # High level summary
+  high_level_summary: true
+
+  # Poem generation for PR summaries
+  poem: false
+
+  # Review status comment
+  review_status: true
+
+  # Collapse walkthrough sections in large PRs
+  collapse_walkthrough: false
+
+  # Auto-review settings
+  auto_review:
+    enabled: true # Automatically review all PRs
+
+    # Ignore certain file patterns
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT REVIEW"
+
+    drafts: false # Don't review draft PRs
+
+    base_branches:
+      - main
+      - master
+      - develop
+
+# Chat settings
+chat:
+  # Auto-reply to comments
+  auto_reply: true
+
+# Tools and checks
+tools:
+  # GitHub Checks integration
+  github_checks:
+    enabled: true
+    timeout_ms: 90000
+
+  # Tone of review comments
+  tone_instructions: "日本語で丁寧にレビューしてください。建設的で具体的なフィードバックを提供し、コードの改善点を明確に説明してください。"
+
+# Path-based instructions for specific areas
+path_instructions:
+  - path: "src/**/*.php"
+    instructions: |
+      - PHP 8.5+の機能を活用しているか確認
+      - セキュリティ脆弱性（SQLインジェクション、XSS、コマンドインジェクション等）をチェック
+      - PSR-12コーディング規約に準拠しているか確認
+      - エラーハンドリングが適切か確認
+      - 型宣言とdocblockが適切か確認
+
+  - path: "tests/**/*.php"
+    instructions: |
+      - テストが実際にコードの動作を検証しているか確認
+      - エッジケースがカバーされているか確認
+      - モックが適切に使用されているか確認
+      - アサーションが明確で意味のあるメッセージを持っているか確認
+      - 重複テストがないか確認
+
+# Knowledge base (optional - for providing context about the codebase)
+knowledge_base:
+  - "このプロジェクトはPHP 8.5+で書かれており、Google/Bing/DuckDuckGoのボットIPリストを管理するライブラリです"
+  - "PHPUnit 11.5を使用してテストを実行しています"
+  - "すべてのテストは実際の動作を検証する必要があり、偽テスト（都合の良いテスト）は許可されません"
