@@ -1,11 +1,11 @@
 [*]
 charset = utf-8
 end_of_line = crlf
+tab_width = 4
 indent_size = 4
-indent_style = tab
+indent_style = space
 insert_final_newline = false
 max_line_length = 120
-tab_width = 4
 ij_continuation_indent_size = 4
 ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
@@ -67,8 +67,6 @@ ij_less_use_double_quotes = true
 ij_less_value_alignment = 0
 
 [*.sass]
-indent_size = 2
-indent_style = space
 ij_continuation_indent_size = 8
 ij_sass_align_closing_brace_with_properties = false
 ij_sass_blank_lines_around_nested_selector = 1
@@ -120,9 +118,6 @@ ij_twig_spaces_inside_delimiters = true
 ij_twig_spaces_inside_variable_delimiters = false
 
 [*.vue]
-indent_size = 2
-indent_style = space
-tab_width = 2
 ij_vue_indent_children_of_top_level = template
 ij_vue_interpolation_new_line_after_start_delimiter = true
 ij_vue_interpolation_new_line_before_end_delimiter = true
@@ -158,7 +153,6 @@ ij_xml_space_inside_empty_tag = false
 ij_xml_text_wrap = normal
 
 [{*.ats,*.cts,*.mts,*.ts}]
-indent_style = space
 ij_typescript_align_imports = false
 ij_typescript_align_multiline_array_initializer_expression = false
 ij_typescript_align_multiline_binary_operation = false
@@ -745,8 +739,6 @@ ij_php_while_brace_force = always
 ij_php_while_on_new_line = false
 
 [{*.har,*.jsb2,*.jsb3,*.json,*.jsonc,*.postman_collection,*.postman_collection.json,*.postman_environment,*.postman_environment.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,.ws-context,composer.lock,jest.config}]
-indent_size = 2
-indent_style = space
 ij_continuation_indent_size = 8
 ij_json_array_wrapping = split_into_lines
 ij_json_keep_blank_lines_in_code = 0
@@ -799,7 +791,7 @@ ij_http-request_space_before_comma = true
 ij_http-request_spaces_around_assignment_operators = true
 
 [{*.markdown,*.md}]
-indent_style = space
+indent_size = 2
 ij_continuation_indent_size = 8
 ij_markdown_force_one_space_after_blockquote_symbol = true
 ij_markdown_force_one_space_after_header_symbol = true
