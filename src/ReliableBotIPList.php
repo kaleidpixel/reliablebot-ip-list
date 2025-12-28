@@ -122,6 +122,25 @@ class ReliableBotIPList {
 	}
 
 	/**
+	 * @param array  $haystack
+	 * @param string $needle
+	 *
+	 * @return bool
+	 */
+	public static function is_value_exists_recursive(array $haystack, string $needle): bool
+	{
+		foreach ($haystack as $subArray)
+		{
+			if (is_array($subArray) && in_array($needle, $subArray, true))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @param array $urls
 	 * @param array $headers
 	 * @param array $method
@@ -230,7 +249,7 @@ class ReliableBotIPList {
 	 * @throws DateMalformedStringException
 	 * @since 1.0.0
 	 */
-	protected function isCreate(bool $force = false): bool
+	protected function is_create(bool $force = false): bool
 	{
 		$create = false;
 
@@ -256,8 +275,10 @@ class ReliableBotIPList {
 						$create = true;
 					}
 				}
-				catch (Exception $e)
+				catch (DateMalformedStringException $e)
 				{
+					// DateTime creation failed - log the error and continue with $create = false
+					error_log("ReliableBotIPList::is_create() - DateTime error: " . $e->getMessage());
 				}
 			}
 
@@ -285,9 +306,9 @@ class ReliableBotIPList {
 	{
 		$list = [];
 
-		if ($this->isCreate($force))
+		if ($this->is_create($force))
 		{
-			$iplist = $this->addBotIpList();
+			$iplist = $this->add_bot_ip_list();
 
 			if (in_array($this->ipv, [4, 46], true))
 			{
@@ -369,7 +390,7 @@ class ReliableBotIPList {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	protected function addBotIpList(): array
+	protected function add_bot_ip_list(): array
 	{
 		$contents = $this->curl_get_contents($this->ipListEndPoints());
 		$result   = [
@@ -379,24 +400,38 @@ class ReliableBotIPList {
 
 		foreach ($contents as $i => $content)
 		{
-			if ($content['http_code'] === 200)
+			if ($content['http_code'] !== 200)
 			{
-				$lines = json_decode($content['body']);
+				unset($contents[$i]);
+				continue;
 			}
-			else
+
+			// Decode JSON and check for errors
+			$lines = json_decode($content['body']);
+
+			if ($lines === null)
 			{
+				// JSON decode failed - invalid JSON or empty response
+				unset($contents[$i]);
+				continue;
+			}
+
+			// Check if the expected 'prefixes' property exists and is an array
+			if (!isset($lines->prefixes) || !is_array($lines->prefixes))
+			{
+				// Unexpected JSON structure - skip this endpoint
 				unset($contents[$i]);
 				continue;
 			}
 
 			foreach ($lines->prefixes as $ii => $prefixe)
 			{
-				if (isset($prefixe->ipv4Prefix))
+				if (isset($prefixe->ipv4Prefix) && $this->is_value_exists_recursive($result['ipv4'], $prefixe->ipv4Prefix) === false)
 				{
 					$result['ipv4'][$i][] = $prefixe->ipv4Prefix;
 				}
 
-				if (isset($prefixe->ipv6Prefix))
+				if (isset($prefixe->ipv6Prefix) && $this->is_value_exists_recursive($result['ipv6'], $prefixe->ipv6Prefix) === false)
 				{
 					$result['ipv6'][$i][] = $prefixe->ipv6Prefix;
 				}
